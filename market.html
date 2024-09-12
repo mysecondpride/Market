@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <style>
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+    </style>
+    <center><p>Market V.20</p></center>
+    <fieldset>
+      <legend>Pilih Motor Berdasarkan:</legend>
+      <label for="namaproduct">Merk Motor</label>
+      <input
+        type="text"
+        name="namaproduct"
+        id="namaproduct"
+        oninput="filterNama()"
+      />
+      <br />
+      <label for="price1">Range Harga</label>
+      <input type="number" name="price1" id="harga1" oninput="filterHarga()" />
+      <label>-</label>
+      <input type="number" name="price2" id="harga2" oninput="filterHarga()" />
+      <br />
+      <label for="filter-cate" name="xx">Wilayah Samsat:</label>
+      <select name="filter-cate" name="xx" id="xx" onselect="wilayah(value)">
+        <option value="all">All</option>
+        <option value="Gsk">Gresik</option>
+        <option value="Sby">Surabaya</option>
+        <option value="Sda">Sidoarjo</option>
+        <option value="La">Lamongan</option>
+        <option value="Mjk">Mojokerto</option>
+      </select>
+      <br />
+      <label for="production" name="production">Tahun Produksi:</label>
+      <input type="number" name="production" id="production" oninput="value" />
+      <br />
+      <button>reset</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Input Data</legend>
+      <table>
+        <tr>
+          <td>
+            <input type="text" placeholder="nopol" id="nopol" />
+          </td>
+          <td>
+            <input type="text" placeholder="merkmotor" id="merkmotor" />
+          </td>
+          <td>
+            <input type="text" placeholder="warnamotor" id="color" />
+          </td>
+
+          <td>
+            <select
+              name="filter-samsat"
+              id="samsatMana"
+              placeholder="lokasisamsat"
+            >
+              <option value="Surabaya">Surabaya</option>
+              <option value="Gresik">Gresik</option>
+              <option value="Sidoarjo">Sidoarjo</option>
+              <option value="Mojokerto">Mojokerto</option>
+              <option value="Lamongan">Lamongan</option>
+            </select>
+          </td>
+          <td>
+            <input type="number" placeholder="tahunproduksi" id="year" />
+          </td>
+          <td>
+            <input
+              type="text"
+              placeholder="jatuh tempo pembayaran"
+              id="payment"
+            />
+          </td>
+          <td>
+            <input type="date" placeholder="ganti plat" id="plate" />
+          </td>
+          <td>
+            <input type="number" placeholder="harga cash/kontan" id="kontan" />
+          </td>
+          <td>
+            <input type="text" placeholder="info tambahan" id="moreInfo" />
+          </td>
+          <td>
+            <img src=" " alt="gear" id="gambar" />
+          </td>
+        </tr>
+      </table>
+      <br />
+
+      <button onclick="myFunction()">InputData</button>
+    </fieldset>
+
+    <fieldset>
+      <legend>Unit yang Tersedia</legend>
+      <table id="tablecore">
+        <thead>
+          <tr>
+            <th>NoPol</th>
+            <th>Merk Motor</th>
+            <th>Warna</th>
+            <th>Lokasi Samsat</th>
+            <th>Tahun Produksi</th>
+            <th>Jatuh Tempo Pajak</th>
+            <th>Pergantian Plat</th>
+            <th>Harga Cash</th>
+            <th>Stok Barang</th>
+            <th>Info Tambahan</th>
+            <th>Gambar</th>
+            <th>Buy</th>
+            <th colspan="2">Action</th>
+          </tr>
+        </thead>
+        <tbody id="tablelita"></tbody>
+      </table>
+    </fieldset>
+
+    <fieldset>
+      <legend>Yang dimasukkan keranjang</legend>
+      <table id="expanseCart">
+        <thead>
+          <tr>
+            <th>nopol</th>
+            <th>merkmotor</th>
+            <th>harga</th>
+            <th>qty</th>
+            <th>action</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <br />
+      <button>payment</button>
+      <fieldset>
+        <legend>payment</legend>
+        <h3>transaction detail</h3>
+      </fieldset>
+    </fieldset>
+
+    <p class="app"></p>
+  </body>
+
+  <script src="./databases.js"></script>
+
+  <script>
+    let showData = (data) => {
+      let getDOM = document.getElementById("tablecore").tBodies[0];
+      let res = " ";
+      data.forEach((item, index) => {
+        if (index == indexEdit) {
+          res += `
+                 <tr>
+                   <td> <input type="text" id="editPlat" value="${item.nopol}"/> </td>
+                   <td><input type="text" id="editMerkMotor" value="${item.merkMotor}"/></td>
+                   <td><input type="text" id="editWarna" value="${item.warna}"/></td>
+                   <td><input type="text" id="editLokasiSamsat" value="${item.lokasiSamsat}"/></td>
+                   <td><input type="number" id="editTahunProduksi" value="${item.tahunProduksi}"/></td>
+                     <td><input type="text" id="editJatuhTempoPajak" value="${item.JTP}"/></td>
+                       <td><input type="text" id="editPergantianPlat" value="${item.pergantianPlat}"/></td>
+                         <td><input type="number" id="editHargaCash" value="${item.hargaCash}"/></td>
+                         <td><input type="number" id="editStokBarang" value="${item.stok}"/></td>
+                           <td><input type="text" id="editInfoTambahan" value="${item.infoTambahan}"/></td>
+                           <td></td>
+                             <td><input type="text" id="editGambar" value="${item.Gambar}"/></td>
+                            <td><button onclick="addCart(${index})">add</button></td>
+                   <td><button onclick="onSave(${index})">Save</button></td>
+                   <td><button onclick="onCancel(${index})">Cancel</button></td>
+                   </tr>
+                   `;
+        } else {
+          res += `<tr>
+                     <td> ${item.nopol} </td>
+                     <td>${item.merkMotor}</td>
+                     <td>${item.warna}</td>
+                     <td>${item.lokasiSamsat}</td>
+                     <td>${item.tahunProduksi}</td>
+                     <td>${item.JTP}</td>
+                     <td>${item.pergantianPlat}</td>
+                     <td>${item.hargaCash}</td>
+                     <td>${item.stok}</td>
+                     <td>${item.infoTambahan}</td>
+                     <td>${item.Gambar}</td>
+                     <td><button onclick="addcart(${index})">Add</button></td>
+                     <td><button onclick="edit(${index})">Edit</button></td>
+                     <td><button onclick="ondelete(${index})">Delete</button></td>
+                     </tr>`;
+        }
+      });
+      getDOM.innerHTML = res;
+    };
+    showData(products);
+
+    function myFunction() {
+      let nopol = document.getElementById("nopol").value;
+      let merkmotor = document.getElementById("merkmotor").value;
+      let color = document.getElementById("color").value;
+      let samsat = document.getElementById("samsatMana").value;
+      let year = document.getElementById("year").value;
+      let payment = document.getElementById("payment").value;
+      let plate = document.getElementById("plate").value;
+      let kontan = document.getElementById("kontan").value;
+      let stokBarang = document.getElementById("stokBarang").value;
+      let moreinfo = document.getElementById("moreInfo").value;
+      let gambar = document.getElementById("gambar").value;
+
+      console.log(
+        nopol,
+        merkmotor,
+        color,
+        samsat,
+        year,
+        payment,
+        plate,
+        kontan,
+        stokBarang,
+        moreinfo,
+        gambar
+      );
+
+      products.push(
+        new Products(
+          nopol,
+          merkmotor,
+          color,
+          samsat,
+          year,
+          payment,
+          plate,
+          kontan,
+          stokBarang,
+          moreinfo,
+          gambar
+        )
+      );
+      showData(products);
+    }
+
+    function edit(index) {
+      indexEdit = index;
+      console.log(indexEdit);
+      showData(products);
+    }
+
+    function onSave(index) {
+      let nopol1 = document.getElementById("editPlat").value;
+      let merkMotor1 = document.getElementById("editMerkMotor").value;
+      let warna1 = document.getElementById("editWarna").value;
+      let lokasiSamsat1 = document.getElementById("editLokasiSamsat").value;
+      let tahunProduksi1 = document.getElementById("editTahunProduksi").value;
+      let jatuhTempoPajak1 = document.getElementById(
+        "editJatuhTempoPajak"
+      ).value;
+      let pergantianPlat1 = document.getElementById("editPergantianPlat").value;
+      let hargaCash1 = document.getElementById("editHargaCash").value;
+
+      let stokBarang1 = document.getElementById("editStokBarang").value;
+      let infoTambahan1 = document.getElementById("editInfoTambahan").value;
+      let gambar1 = document.getElementById("editGambar").value;
+
+      products.splice(
+        index,
+        1,
+        new Products(
+          nopol1,
+          merkMotor1,
+          warna1,
+          lokasiSamsat1,
+          tahunProduksi1,
+          jatuhTempoPajak1,
+          pergantianPlat1,
+          hargaCash1,
+          stokBarang1,
+          infoTambahan1,
+          gambar1
+        )
+      );
+      indexEdit = null;
+      showData(products);
+    }
+
+    function onCancel(index) {
+      let nopol1 = (document.getElementById("editPlat").value =
+        products[index].nopol);
+      let merkMotor1 = (document.getElementById("editMerkMotor").value =
+        products[index].merkMotor);
+      let warna1 = (document.getElementById("editWarna").value =
+        products[index].warna);
+      let lokasiSamsat1 = (document.getElementById("editLokasiSamsat").value =
+        products[index].lokasiSamsat);
+      let tahunProduksi1 = (document.getElementById("editTahunProduksi").value =
+        products[index].tahunProduksi);
+      let jatuhTempoPajak1 = (document.getElementById(
+        "editJatuhTempoPajak"
+      ).value = products[index].JTP);
+      let pergantianPlat1 = (document.getElementById(
+        "editPergantianPlat"
+      ).value = products[index].pergantianPlat);
+      let hargaCash1 = (document.getElementById("editHargaCash").value =
+        products[index].hargaCash);
+      let stokBarang1 = (document.getElementById("editStokBarang").value =
+        products[index].stokBarang);
+      let infoTambahan1 = (document.getElementById("editInfoTambahan").value =
+        products[index].infoTambahan);
+      let gambar1 = (document.getElementById("editGambar").value =
+        products[index].Gambar);
+
+      // showData(products);
+    }
+    // membangun delete function
+    function ondelete(i) {
+      splice(i, 1);
+      alert(`apakah anda yakin akan mendelete baris ke-${i + 1}`);
+      showData(products);
+    }
+
+    // MEMBANGUN FILTER
+
+    function filterNama() {
+      let harga1 = document.getElementById("harga1").value;
+      let harga2 = document.getElementById("harga2").value;
+      let thevalueofName = document.getElementById("namaproduct").value;
+
+      if ((thevalueofName, !harga1, !harga2)) {
+        let showFilter = products.filter((item) => {
+          return item.merkMotor
+            .toLowerCase()
+            .includes(thevalueofName.toLowerCase());
+        });
+        showData(showFilter);
+      } else if ((thevalueofName, harga1, !harga2)) {
+        let showFilter = products.filter((item) => {
+          return (
+            item.merkMotor.toLowerCase().includes(thevalueofName) &&
+            item.hargaCash >= parseFloat(harga1)
+          );
+        });
+        showData(showFilter);
+      } else if ((thevalueofName, harga1, harga2)) {
+        let showFilter = products.filter((item) => {
+          return (
+            item.merkMotor.toLowerCase().includes(thevalueofName) &&
+            item.hargaCash >= parseFloat(harga1) &&
+            item.hargaCash <= parseFloat(harga2)
+          );
+        });
+        showData(showFilter);
+      }
+    }
+    //FIlter Harga
+
+    function filterHarga() {
+      let harga1 = document.getElementById("harga1").value;
+      let harga2 = document.getElementById("harga2").value;
+      let thevalueofName = document.getElementById("namaproduct").value;
+
+      if ((thevalueofName, !harga1, !harga2)) {
+        let showFilter = products.filter((item) => {
+          return item.merkMotor
+            .toLowerCase()
+            .includes(thevalueofName.toLowerCase());
+        });
+        showData(showFilter);
+      } else if ((thevalueofName, harga1, !harga2)) {
+        let showFilter = products.filter((item) => {
+          return (
+            item.merkMotor.toLowerCase().includes(thevalueofName) &&
+            item.hargaCash >= parseFloat(harga1)
+          );
+        });
+        showData(showFilter);
+      } else if ((thevalueofName, harga1, harga2)) {
+        let showFilter = products.filter((item) => {
+          return (
+            item.merkMotor.toLowerCase().includes(thevalueofName) &&
+            item.hargaCash >= parseFloat(harga1) &&
+            item.hargaCash <= parseFloat(harga2)
+          );
+        });
+        showData(showFilter);
+      }
+    }
+
+    // function filterHarga() {
+    //   let harga1 = document.getElementById("harga1").value;
+    //   let harga2 = document.getElementById("harga2").value;
+    //   let thevalueofName = document.getElementById("namaproduct").value;
+
+    //   if ((thevalueofName, harga1, harga2)) {
+    //     let showFilter1 = products.filter((item) => {
+    //       return;
+
+    //       item.merkMotor.toLowerCase().includes(thevalueofName.toLowerCase()) &&
+    //         item.hargaCash >= parseFloat(harga1) &&
+    //         item.hargaCash <= parseFloat(harga2);
+    //     });
+    //   } else if ((thevalueofName, harga1, harga2)) {
+    //     let showFilter1 = products.filter((item) => {
+    //       return item.hargaCash >= harga1 && item.hargaCash <= harga2;
+    //     });
+
+    //     showData(showFilter1);
+    //   }
+    // }
+
+    // function filterHarga2() {
+    //   let nilaiHarga2 = document.getElementById("harga2").value;
+    //   let showFilter2 = products.filter((item) => {
+    //     if (nilaiHarga2 >= item.hargaCash) {
+    //       return item.hargaCash <= nilaiHarga2;
+    //     }
+    //   });
+    //   console.log(showFilter2);
+    //   console.log(showData(showFilter2));
+    // }
+
+    // filterGabungan(nama, harga1, harga2);
+    // console.log(filterGabungan(nama, harga1, harga2));
+
+    // function harga1(value) {
+    //   console.log(value);
+    //   let showFilter1 = products.filter((item) => {
+    //     if (value <= item.hargaCash) {
+    //       return item.hargaCash >= value;
+    //     }
+    //   });
+    //   console.log(showFilter1);
+    //   console.log(showData(showFilter1));
+    // }
+    // function harga2(value) {
+    //   let showFilter2 = products.filter((item) => {
+    //     if (value >= item.hargaCash) {
+    //       return item.hargaCash <= value;
+    //     }
+    //   });
+    //   console.log(showFilter2);
+    //   console.log(showData(showFilter2));
+    // }
+
+    function addcart(index) {
+      // Get the product to be added
+      console.log(index);
+      let buyProducts = { ...products[index] };
+      // Check if the product is already in the cart and get its index
+      let existingProductIndex = addkeranjang.findIndex(
+        (item) => item.nopol === buyProducts.nopol
+      );
+      // the requirement for cart (should  not  be a similar item)
+
+      if (existingProductIndex !== -1) {
+        addkeranjang[existingProductIndex].qty += 1;
+        if (buyProducts.stok == 0) {
+          addkeranjang[existingProductIndex].qty -= 1;
+        }
+      } else {
+        buyProducts.qty = 1;
+        addkeranjang.push(buyProducts);
+        // let sigmaCart = products[index].qty;
+        // sigmaCart = products[index] - 1;
+      }
+
+      //proses pengurangan stok //percabangan ke-2
+      if (products[index].stok > 0) {
+        console.log((products[index].stok -= 1));
+      } else {
+        alert("stok entek bos");
+      }
+
+      showData(products);
+      showCart(); // Show updated cart
+    }
+
+    //ini adalah render cart
+    function showCart() {
+      let getDOM = document.getElementById("expanseCart").tBodies[0];
+      let res = ""; // Initialize HTML string for cart items
+
+      addkeranjang.forEach((item, index) => {
+        res += `
+           <tr>
+             <td>${item.nopol}</td>
+             <td>${item.merkMotor}</td>
+             <td>${item.hargaCash}</td>
+             <td>${item.qty}</td>
+             <td><button onclick="deleteOnCart(${index})">delete</button></td>
+           </tr>
+         `;
+      });
+
+      // Update the table body with the generated HTML
+      getDOM.innerHTML = res;
+    }
+
+    function deleteOnCart(index) {
+      let productsCart = { ...addkeranjang[index] };
+      console.log(productsCart);
+      console.log(index);
+      let existingProductIndex = products.findIndex(
+        (item) => item.nopol === productsCart.nopol
+      );
+
+      if (addkeranjang[index].qty > 0) {
+        console.log((addkeranjang[index].qty -= 1));
+        console.log((products[existingProductIndex].stok += 1));
+      } else if (addkeranjang[index].qty <= 0) {
+        console.log((addkeranjang[index].qty = 0));
+        alert("gak isok bos, wis enol koq dikurangi");
+      }
+
+      console.log(existingProductIndex);
+      showCart(deleteOnCart);
+      showData(products);
+    }
+  </script>
+</html>
